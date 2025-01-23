@@ -1,0 +1,4 @@
+pyqt5==5.15.11
+lxml==5.3.0
+git+https://github.com/Elcherneske/OpenMSUtils.git
+
