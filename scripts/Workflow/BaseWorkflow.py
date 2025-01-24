@@ -30,7 +30,7 @@ class BaseWorkflow(QThread):
                 if output == '' and process.poll() is not None:
                     break
                 if output:
-                    self.output_received.emit(output.strip())
+                    self.output_received.emit(output)
         self.output_received.emit("============Process finished============")
 
 if __name__ == '__main__':

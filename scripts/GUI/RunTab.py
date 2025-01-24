@@ -13,7 +13,16 @@ class RunTab(QWidget):
         self._init_ui()
     
     def update_output(self, text):
-        self.output_text.append(text) 
+        self.output_text.append(text)
+        # 检查行数并保持最多1000行
+        if self.output_text.document().blockCount() > 1000:
+            cursor = self.output_text.textCursor()
+            cursor.movePosition(cursor.Start)
+            cursor.movePosition(cursor.Down, cursor.MoveAnchor, 1)  # 移动到第二行
+            cursor.movePosition(cursor.End, cursor.KeepAnchor)  # 选中所有内容
+            cursor.removeSelectedText()  # 删除选中的内容
+            cursor.deleteChar()  # 删除选中的换行符
+            self.output_text.setTextCursor(cursor)
     
     def check(self) -> bool:
         if not self.args.get_output_dir():
