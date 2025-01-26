@@ -11,7 +11,9 @@ class Setting:
             self.new_config()
     
     def get_config(self, section, option):
-        return self.config[section][option]
+        if section in self.config and option in self.config[section]:
+            return self.config[section][option]
+        return None
     
     def save_config(self):
         with open(self.config_path, 'w') as configfile:
@@ -29,7 +31,9 @@ class Setting:
         self.set_config('Tools', 'msconvert', '', is_save = False)
         self.set_config('Tools', 'toppic', '', is_save = False)
         self.set_config('Tools', 'topfd', '', is_save = False)
-        self.set_config('Tools', 'informed_proteomics', '', is_save = False)
+        self.set_config('Tools', 'pbfgen', '', is_save = False)
+        self.set_config('Tools', 'promex', '', is_save = False)
+        self.set_config('Tools', 'mspathfinder', '', is_save = False)
         self.set_config('Tools', 'spectator', '', is_save = False)
         self.set_config('Fasta', 'fasta_path', '', is_save = False)
         self.set_config('Output', 'output_dir', '', is_save = False)

@@ -8,6 +8,7 @@ from GUI.MSConvertConfigTab import MSConvertConfigTab
 from GUI.WorkflowConfigTab import WorkflowConfigTab
 from GUI.RunTab import RunTab
 from GUI.ToppicConfigTab import ToppicConfigTab
+from GUI.InformedProteomicsConfigTab import InformedProteomicsConfigTab
 from Workflow.WorkflowManager import WorkflowManager
 
 class AppGUI(QWidget):
@@ -27,16 +28,18 @@ class AppGUI(QWidget):
         
         # 创建各个标签页实例
         self.tools_tab = ToolsTab(self.args)
+        self.workflow_config_tab = WorkflowConfigTab(self.args)
         self.msconvert_config_tab = MSConvertConfigTab(self.args)
         self.toppic_config_tab = ToppicConfigTab(self.args)
-        self.workflow_config_tab = WorkflowConfigTab(self.args)
+        self.informed_proteomics_config_tab = InformedProteomicsConfigTab(self.args)
         self.run_tab = RunTab(self.args)
 
         # 添加标签页
         self.tabs.addTab(self.tools_tab, "Tools config")
+        self.tabs.addTab(self.workflow_config_tab, "Workflow config")
         self.tabs.addTab(self.msconvert_config_tab, "MSConvert config")
         self.tabs.addTab(self.toppic_config_tab, "Toppic config")
-        self.tabs.addTab(self.workflow_config_tab, "Workflow config")
+        self.tabs.addTab(self.informed_proteomics_config_tab, "Informed Proteomics config")
         self.tabs.addTab(self.run_tab, "Run")
         
         # 添加运行接口
@@ -58,8 +61,3 @@ class AppGUI(QWidget):
         self.workflow.output_received.connect(self.update_output)
         self.workflow.start()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = AppGUI()
-    ex.show()
-    sys.exit(app.exec_())

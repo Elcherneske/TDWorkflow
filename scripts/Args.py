@@ -1,10 +1,17 @@
 class Args:
     def __init__(self):
+        self.mode = None
+        self.ms_file_path = []
+        self.fasta_path = None
+        self.output_dir = None
+        
         self.tool_paths = {   # 存储各种工具的路径
             'msconvert': None,
             'toppic': None,
             'topfd': None,
-            'informed_proteomics': None,
+            'pbfgen': None,
+            'promex': None,
+            'mspathfinder': None,
         }
         self.general_config_options = {}
         self.msconvert_config_options = {
@@ -58,11 +65,54 @@ class Args:
             'no_topfd_feature': None,
             'combined_file_name': None
         }
-        self.informed_proteomics_config_options = {}
-        self.mode = None
-        self.ms_file_path = []
-        self.fasta_path = None
-        self.output_dir = None
+
+        self.pbfgen_config_options = {
+            'start': None,  
+            'end': None,    
+            'ParamFile': None
+        }
+        
+        self.promex_config_options = {
+            'MinCharge': None,  
+            'MaxCharge': None, 
+            'MinMass': None, 
+            'MaxMass': None, 
+            'FeatureMap': None, 
+            'Score': None,  
+            'MaxThreads': None,  
+            'csv': None,  
+            'BinResPPM': None,  
+            'ScoreThreshold': None,  
+            'ms1ft': None,  
+            'ParamFile': None  
+        }
+
+        self.mspathfinder_config_options = {
+            'ic': None,  
+            'TagSearch': None,  
+            'MemMatches': None,  
+            'NumMatchesPerSpec': None,  
+            'IncludeDecoys': None,  
+            'ModificationFile': None,  
+            'tda': None,  
+            'overwrite': None,  
+            'PMTolerance': None,  
+            'FragTolerance': None,  
+            'MinLength': None,  
+            'MaxLength': None,  
+            'MinCharge': None,  
+            'MaxCharge': None,  
+            'MinFragCharge': None,  
+            'MaxFragCharge': None,  
+            'MinMass': None,  
+            'MaxMass': None,  
+            'FeatureFile': None,  
+            'ThreadCount': None,  
+            'ActivationMethod': None,  
+            'ScansFilePath': None,  
+            'UseFlipScoring': None,  
+            'ParamFile': None  
+        }
     
     def set_tool_path(self, tool_name, path):
         self.tool_paths[tool_name] = path
@@ -127,8 +177,20 @@ class Args:
     def get_topfd_config_option(self, key):
         return self.topfd_config_options.get(key, None)
     
-    def set_informed_proteomics_config_option(self, key, value):
-        self.informed_proteomics_config_options[key] = value
+    def set_pbfgen_config_option(self, key, value):
+        self.pbfgen_config_options[key] = value
     
-    def get_informed_proteomics_config_option(self, key):
-        return self.informed_proteomics_config_options.get(key, None)   
+    def get_pbfgen_config_option(self, key):
+        return self.pbfgen_config_options.get(key, None)
+    
+    def set_promex_config_option(self, key, value):
+        self.promex_config_options[key] = value
+    
+    def get_promex_config_option(self, key):
+        return self.promex_config_options.get(key, None)
+    
+    def set_mspathfinder_config_option(self, key, value):
+        self.mspathfinder_config_options[key] = value
+    
+    def get_mspathfinder_config_option(self, key):
+        return self.mspathfinder_config_options.get(key, None)
