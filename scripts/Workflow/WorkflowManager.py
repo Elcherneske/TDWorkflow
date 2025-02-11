@@ -1,6 +1,7 @@
 from .OnlyConvertWorkflow import OnlyConvertWorkflow
 from .OnlyTopfdWorkflow import OnlyTopfdWorkflow
 from .OnlyToppicWorkflow import OnlyToppicWorkflow
+from .OnlyTopmgWorkflow import OnlyTopmgWorkflow
 from .OnlyPbfgenWorkflow import OnlyPbfgenWorkflow
 from .OnlyPromexWorkflow import OnlyPromexWorkflow
 from .OnlyMSpathfinderWorkflow import OnlyMSpathfinderWorkflow
@@ -14,6 +15,7 @@ class WorkflowManager:
             'only convert': OnlyConvertWorkflow,
             'only topfd': OnlyTopfdWorkflow,
             'only toppic': OnlyToppicWorkflow,
+            'only topmg': OnlyTopmgWorkflow,
             'only pbfgen': OnlyPbfgenWorkflow,
             'only promex': OnlyPromexWorkflow,
             'only mspathfinder': OnlyMSpathfinderWorkflow,

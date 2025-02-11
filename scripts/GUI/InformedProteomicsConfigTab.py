@@ -65,7 +65,7 @@ class InformedProteomicsConfigTab(QWidget):
         
         # 电荷态范围
         min_charge = self._create_number_input("Minimum charge:", "MinCharge", 1, 60, 1, "promex")
-        max_charge = self._create_number_input("Maximum charge:", "MaxCharge", 1, 60, 60, "promex")
+        max_charge = self._create_number_input("Maximum charge:", "MaxCharge", 1, 99, 60, "promex")
         
         # 质量范围
         min_mass = self._create_number_input("Minimum mass (Da):", "MinMass", 600, 100000, 2000, "promex")
@@ -82,15 +82,17 @@ class InformedProteomicsConfigTab(QWidget):
 
         # 复选框选项
         feature_map = QCheckBox("Output feature heatmap")
-        feature_map.setChecked(True)
-        feature_map.stateChanged.connect(lambda state: self.args.set_promex_config_option('FeatureMap', state == QCheckBox.Checked))
+        self.args.set_promex_config_option('FeatureMap', False)
+        feature_map.stateChanged.connect(lambda state: self.args.set_promex_config_option('FeatureMap', bool(state)))
         
         score = QCheckBox("Output extended scoring")
-        score.stateChanged.connect(lambda state: self.args.set_promex_config_option('Score', state == QCheckBox.Checked))
-        
+        self.args.set_promex_config_option('Score', False)
+        score.stateChanged.connect(lambda state: self.args.set_promex_config_option('Score', bool(state)))        
+
         csv = QCheckBox("Write feature data to CSV")
-        csv.stateChanged.connect(lambda state: self.args.set_promex_config_option('csv', state == QCheckBox.Checked))
-        
+        self.args.set_promex_config_option('csv', False)
+        csv.stateChanged.connect(lambda state: self.args.set_promex_config_option('csv', bool(state)))
+
         layout.addLayout(min_charge)
         layout.addLayout(max_charge)
         layout.addLayout(min_mass)
@@ -137,39 +139,42 @@ class InformedProteomicsConfigTab(QWidget):
         max_length = self._create_number_input("Maximum sequence length:", "MaxLength", 0, 1000, 500, "mspathfinder")
         
         # 电荷态范围
-        min_charge = self._create_number_input("Minimum charge:", "MinCharge", 1, 50, 2, "mspathfinder")
-        max_charge = self._create_number_input("Maximum charge:", "MaxCharge", 1, 50, 50, "mspathfinder")
-        min_frag_charge = self._create_number_input("Minimum fragment charge:", "MinFragCharge", 1, 20, 1, "mspathfinder")
-        max_frag_charge = self._create_number_input("Maximum fragment charge:", "MaxFragCharge", 1, 20, 20, "mspathfinder")
+        min_charge = self._create_number_input("Minimum charge:", "MinCharge", 1, 99, 2, "mspathfinder")
+        max_charge = self._create_number_input("Maximum charge:", "MaxCharge", 1, 99, 50, "mspathfinder")
+        min_frag_charge = self._create_number_input("Minimum fragment charge:", "MinFragCharge", 1, 99, 1, "mspathfinder")
+        max_frag_charge = self._create_number_input("Maximum fragment charge:", "MaxFragCharge", 1, 99, 20, "mspathfinder")
         
         # 质量范围
         min_mass = self._create_number_input("Minimum mass (Da):", "MinMass", 0, 100000, 3000, "mspathfinder")
         max_mass = self._create_number_input("Maximum mass (Da):", "MaxMass", 0, 100000, 50000, "mspathfinder")
 
         thread_count = self._create_number_input("Maximum number of threads (0 for automatic):", "ThreadCount", 0, 100, 0, "mspathfinder")
-        
+
         # 复选框选项
         tag_search = QCheckBox("Include Tag-based Search")
-        tag_search.setChecked(True)
-        tag_search.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('TagSearch', state == QCheckBox.Checked))
+        tag_search.setChecked(False)
+        self.args.set_mspathfinder_config_option('TagSearch', False)  # Default value
+        tag_search.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('TagSearch', bool(state)))
         
         include_decoys = QCheckBox("Include decoy results")
-        include_decoys.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('IncludeDecoys', state == QCheckBox.Checked))
-        
+        include_decoys.setChecked(False)  # 默认不包含
+        self.args.set_mspathfinder_config_option('IncludeDecoys', False)
+        include_decoys.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('IncludeDecoys', bool(state)))        
+
         use_flip_scoring = QCheckBox("Use FLIP scoring")
-        use_flip_scoring.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('UseFlipScoring', state == QCheckBox.Checked))
-        
-        tda_layout = QHBoxLayout()
+        use_flip_scoring.setChecked(False)  # 默认不使用
+        self.args.set_mspathfinder_config_option('UseFlipScoring', False)
+        use_flip_scoring.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('UseFlipScoring', bool(state)))        
+
         tda_checkbox = QCheckBox("Search decoy database:")
         tda_checkbox.setChecked(False)  # 默认不搜索
-        tda_checkbox.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('tda', state == QCheckBox.Checked))
-        tda_layout.addWidget(tda_checkbox)
-        
-        overwrite_layout = QHBoxLayout()
+        self.args.set_mspathfinder_config_option('tda', False)
+        tda_checkbox.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('tda', bool(state)))        
+
         overwrite_checkbox = QCheckBox("Overwrite existing results:")
         overwrite_checkbox.setChecked(False)  # 默认不覆盖
-        overwrite_checkbox.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('overwrite', state == QCheckBox.Checked))
-        overwrite_layout.addWidget(overwrite_checkbox)
+        self.args.set_mspathfinder_config_option('overwrite', False)
+        overwrite_checkbox.stateChanged.connect(lambda state: self.args.set_mspathfinder_config_option('overwrite', bool(state)))
 
         # 文件选择
         mod_file_layout = QHBoxLayout()
@@ -231,11 +236,11 @@ class InformedProteomicsConfigTab(QWidget):
         layout.addWidget(tag_search)
         layout.addWidget(include_decoys)
         layout.addWidget(use_flip_scoring)
-        layout.addLayout(tda_layout)
-        layout.addLayout(overwrite_layout)
+        layout.addWidget(tda_checkbox)
+        layout.addWidget(overwrite_checkbox)
         layout.addLayout(mod_file_layout)
-        layout.addLayout(feature_file_layout)
-        
+        layout.addLayout(feature_file_layout)        
+
         group.setLayout(layout)
         return group
 

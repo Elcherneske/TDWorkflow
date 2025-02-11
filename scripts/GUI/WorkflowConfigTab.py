@@ -40,6 +40,7 @@ class WorkflowConfigTab(QWidget):
             "only convert",
             "only topfd",
             "only toppic",
+            "only topmg",
             "only pbfgen",
             "only promex",
             "only mspathfinder",

@@ -9,6 +9,8 @@ class Args:
             'msconvert': None,
             'toppic': None,
             'topfd': None,
+            'topmg': None,
+            'topdiff': None,
             'pbfgen': None,
             'promex': None,
             'mspathfinder': None,
@@ -35,6 +37,34 @@ class Args:
             'disable_additional_feature_search': None,
             'disable_final_filtering': None
         }
+
+        self.topmg_config_options = {
+            'activation': None,   
+            'fixed-mod': None,   
+            'n-terminal-form': None,   
+            'decoy': None,   
+            'mass-error-tolerance': None,   
+            'proteoform-error-tolerance': None,   
+            'max-shift': None,   
+            'spectrum-cutoff-type': None,   
+            'spectrum-cutoff-value': None,   
+            'proteoform-cutoff-type': None,   
+            'proteoform-cutoff-value': None,   
+            'mod-file-name': None,   
+            'thread-number': None,   
+            'no-topfd-feature': None,   
+            'proteo-graph-gap': None,   
+            'var-ptm-in-gap': None,   
+            'use-asf-diagonal': None,   
+            'var-ptm': None,   
+            'num-shift': None,   
+            'whole-protein-only': None,   
+            'combined-file-name': None,   
+            'keep-temp-files': None,   
+            'keep-decoy-ids': None,   
+            'skip-html-folder': None,
+        }
+
         self.toppic_config_options = {
             'activation': None,
             'fixed_mod': None,
@@ -176,6 +206,12 @@ class Args:
     
     def get_topfd_config_option(self, key):
         return self.topfd_config_options.get(key, None)
+
+    def set_topmg_config_option(self, key, value):
+        self.topmg_config_options[key] = value
+    
+    def get_topmg_config_option(self, key):
+        return self.topmg_config_options.get(key, None)
     
     def set_pbfgen_config_option(self, key, value):
         self.pbfgen_config_options[key] = value

@@ -31,6 +31,8 @@ class Setting:
         self.set_config('Tools', 'msconvert', '', is_save = False)
         self.set_config('Tools', 'toppic', '', is_save = False)
         self.set_config('Tools', 'topfd', '', is_save = False)
+        self.set_config('Tools', 'topmg', '', is_save = False)
+        self.set_config('Tools', 'topdiff', '', is_save = False)
         self.set_config('Tools', 'pbfgen', '', is_save = False)
         self.set_config('Tools', 'promex', '', is_save = False)
         self.set_config('Tools', 'mspathfinder', '', is_save = False)

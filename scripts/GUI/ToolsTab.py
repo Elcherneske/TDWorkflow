@@ -36,6 +36,12 @@ class ToolsTab(QWidget):
         layout.addWidget(self._create_msconvert_group())
         # TopPIC路径设置
         layout.addWidget(self._create_toppic_group())
+        # TopFD路径设置
+        layout.addWidget(self._create_topfd_group())
+        # TopMG路径设置
+        layout.addWidget(self._create_topmg_group())
+        # TopDiff路径设置
+        layout.addWidget(self._create_topdiff_group())
         # PBFGen路径设置
         layout.addWidget(self._create_pbfgen_group())
         # Promex路径设置
@@ -106,6 +112,48 @@ class ToolsTab(QWidget):
 
         layout.addWidget(QLabel("TopFD path:"))
         layout.addWidget(topfd_path)
+        layout.addWidget(browse_btn)
+        layout.addWidget(update_btn)
+        group.setLayout(layout)
+        return group
+    
+    def _create_topmg_group(self):
+        group = QGroupBox("TopMG setting")
+        layout = QHBoxLayout()
+        topmg_path = QLineEdit()
+        if self.setting.get_config('Tools', 'topmg'):
+            topmg_path.setText(self.setting.get_config('Tools', 'topmg'))
+            self.args.set_tool_path('topmg', self.setting.get_config('Tools', 'topmg'))
+        else:
+            topmg_path.setPlaceholderText("Please select the path of TopMG")
+        topmg_path.textChanged.connect(lambda text: (self.args.set_tool_path('topmg', text), self.setting.set_config('Tools', 'topmg', text)))
+        browse_btn = QPushButton("browse")
+        update_btn = QPushButton("update")
+        browse_btn.clicked.connect(lambda: self._browse_file(topmg_path))
+
+        layout.addWidget(QLabel("TopMG path:"))
+        layout.addWidget(topmg_path)
+        layout.addWidget(browse_btn)
+        layout.addWidget(update_btn)
+        group.setLayout(layout)
+        return group
+
+    def _create_topdiff_group(self):
+        group = QGroupBox("TopDiff setting")
+        layout = QHBoxLayout()
+        topdiff_path = QLineEdit()
+        if self.setting.get_config('Tools', 'topdiff'):
+            topdiff_path.setText(self.setting.get_config('Tools', 'topdiff'))
+            self.args.set_tool_path('topdiff', self.setting.get_config('Tools', 'topdiff'))
+        else:
+            topdiff_path.setPlaceholderText("Please select the path of TopDiff")
+        topdiff_path.textChanged.connect(lambda text: (self.args.set_tool_path('topdiff', text), self.setting.set_config('Tools', 'topdiff', text)))
+        browse_btn = QPushButton("browse")
+        update_btn = QPushButton("update")
+        browse_btn.clicked.connect(lambda: self._browse_file(topdiff_path))
+
+        layout.addWidget(QLabel("TopDiff path:"))
+        layout.addWidget(topdiff_path)
         layout.addWidget(browse_btn)
         layout.addWidget(update_btn)
         group.setLayout(layout)

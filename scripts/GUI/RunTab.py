@@ -9,6 +9,7 @@ class RunTab(QWidget):
         self.setting = Setting()
         self.output_text = None
         self.run_button = None
+        self.stop_button = None
         self._init_ui()
     
     def update_output(self, text):
@@ -33,6 +34,7 @@ class RunTab(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self._create_output_group())
         layout.addWidget(self._create_run_button())
+        layout.addWidget(self._create_stop_button())
         layout.addWidget(self._create_output_text())
         self.setLayout(layout)
     
@@ -59,9 +61,17 @@ class RunTab(QWidget):
         group = QGroupBox("Run")
         layout = QHBoxLayout()
         self.run_btn = QPushButton("Run")
-        
         layout.addWidget(QLabel("Run Button:"))
         layout.addWidget(self.run_btn)
+        group.setLayout(layout)
+        return group
+
+    def _create_stop_button(self):
+        group = QGroupBox("Stop")
+        layout = QHBoxLayout()
+        self.stop_btn = QPushButton("Stop")
+        layout.addWidget(QLabel("Stop Button:"))
+        layout.addWidget(self.stop_btn)
         group.setLayout(layout)
         return group
     

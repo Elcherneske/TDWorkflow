@@ -44,7 +44,9 @@ class AppGUI(QWidget):
         
         # 添加运行接口
         self.run_btn = self.run_tab.run_btn
+        self.stop_btn = self.run_tab.stop_btn
         self.run_btn.clicked.connect(self._run_process)
+        self.stop_btn.clicked.connect(self._stop_process)
 
         # 主布局
         layout = QHBoxLayout()
@@ -60,4 +62,10 @@ class AppGUI(QWidget):
         self.workflow = WorkflowManager.create_workflow(mode, self.args) #need self., otherwise it will be deleted before finishing
         self.workflow.output_received.connect(self.update_output)
         self.workflow.start()
+    
+    def _stop_process(self):
+        if self.workflow and self.workflow.isRunning():
+            self.workflow.terminate()
+            self.update_output("Process has been interrupted.")
+        
 
