@@ -8,7 +8,7 @@ A pipeline for top-down proteomics analysis, integrating the following tools:
 
 There are two ways to use the TDWorkflow pipeline:
 
-1. **Download the Release**: You can directly download the `.zip` package from the releases section. After downloading, extract the contents and run the `main.exe` file to start the application.
+1. **Download the installer and install**: You can directly download the `.exe` installer from the releases section. Double click to install the software. After installing, run the `main.exe` file to start the application.
 
 2. **Clone the Repository for Development**: If you want to further develop or modify the project, you can clone the repository using Git. Run the following commands in your terminal:
 
