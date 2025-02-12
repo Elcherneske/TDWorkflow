@@ -60,7 +60,7 @@ class OnlyMSpathfinderWorkflow(BaseWorkflow):
         # Optional TDA mode
         if self.args.get_mspathfinder_config_option('tda') is not None:
             mspathfinder_command.append('-tda')
-            mspathfinder_command.append(str(self.args.get_mspathfinder_config_option('tda')))
+            mspathfinder_command.append('1' if self.args.get_mspathfinder_config_option('tda') else '0')
 
         # Optional overwrite
         if self.args.get_mspathfinder_config_option('overwrite'):
