@@ -23,7 +23,7 @@ class BaseWorkflow(QThread):
                 command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                universal_newlines=True
+                text=True
             )
             while True:
                 output = process.stdout.readline()
@@ -31,6 +31,7 @@ class BaseWorkflow(QThread):
                     break
                 if output:
                     self.output_received.emit(output)
+                    
         self.output_received.emit("============Process finished============")
 
 if __name__ == '__main__':

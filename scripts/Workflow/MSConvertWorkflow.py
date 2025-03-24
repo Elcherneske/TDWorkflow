@@ -1,13 +1,12 @@
 from .BaseWorkflow import BaseWorkflow
 
-class OnlyConvertWorkflow(BaseWorkflow):
+class MSConvertWorkflow(BaseWorkflow):
     def __init__(self, args):
         super().__init__()
         self.args = args
         self.input_files = args.get_ms_file_path()
 
     def prepare_workflow(self):
-        # 示例：设置OnlyConvert的命令序列
         self.commands = [
             self._msconvert_command()
         ] 

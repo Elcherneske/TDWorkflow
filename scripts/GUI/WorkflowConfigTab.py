@@ -37,17 +37,18 @@ class WorkflowConfigTab(QWidget):
         layout = QHBoxLayout()
         mode_combo = QComboBox()
         mode_combo.addItems([
-            "only convert",
-            "only topfd",
-            "only toppic",
-            "only topmg",
-            "only pbfgen",
-            "only promex",
-            "only mspathfinder",
-            "pbfgen and promex",
-            "toppic"
+            "msconvert",
+            "topfd",
+            "toppic",
+            "topmg",
+            "pbfgen",
+            "promex",
+            "mspathfinder",
+            "pbfgen+promex",
+            "sum spectrum",
+            "toppic suit"
         ])
-        self.args.set_mode('only convert')
+        self.args.set_mode('msconvert')
         mode_combo.currentTextChanged.connect(
             lambda text: self.args.set_mode(text)
         )

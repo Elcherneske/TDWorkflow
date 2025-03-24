@@ -1,23 +1,23 @@
 from .BaseWorkflow import BaseWorkflow
 
-class OnlyPbfgenWorkflow(BaseWorkflow):
+class PbfgenWorkflow(BaseWorkflow):
     def __init__(self, args):
         super().__init__()
         self.args = args
         self.input_files = args.get_ms_file_path()
 
     def prepare_workflow(self):
-        self.commands = [
-            self._pbfgen_command()
-        ]
+        self.commands = []
+        for input_file in self.input_files:
+            self.commands.append(self._pbfgen_command(input_file))
+
     
-    def _pbfgen_command(self):
+    def _pbfgen_command(self, input_file):
         pbfgen_command = [self.args.tool_paths['pbfgen']]
         
         # Required input file
         pbfgen_command.append('-i')
-        for file in self.input_files:
-            pbfgen_command.append(file)
+        pbfgen_command.append(input_file)
         
         if self.args.get_output_dir():
             pbfgen_command.append('-o')

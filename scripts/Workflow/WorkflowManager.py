@@ -1,26 +1,28 @@
-from .OnlyConvertWorkflow import OnlyConvertWorkflow
-from .OnlyTopfdWorkflow import OnlyTopfdWorkflow
-from .OnlyToppicWorkflow import OnlyToppicWorkflow
-from .OnlyTopmgWorkflow import OnlyTopmgWorkflow
-from .OnlyPbfgenWorkflow import OnlyPbfgenWorkflow
-from .OnlyPromexWorkflow import OnlyPromexWorkflow
-from .OnlyMSpathfinderWorkflow import OnlyMSpathfinderWorkflow
-from .PbfgenPromexWorkflow import PbfgenPromexWorkflow
+from .MSConvertWorkflow import MSConvertWorkflow
+from .TopfdWorkflow import TopfdWorkflow
 from .ToppicWorkflow import ToppicWorkflow
+from .TopmgWorkflow import TopmgWorkflow
+from .PbfgenWorkflow import PbfgenWorkflow
+from .PromexWorkflow import PromexWorkflow
+from .MSpathfinderWorkflow import MSpathfinderWorkflow
+from .PbfgenPromexWorkflow import PbfgenPromexWorkflow
+from .ToppicSuitWorkflow import ToppicSuitWorkflow
+from .SpectrumSumWorkflow import SpectrumSumWorkflow
 
 class WorkflowManager:
     @staticmethod
     def create_workflow(mode, args):
         workflows = {
-            'only convert': OnlyConvertWorkflow,
-            'only topfd': OnlyTopfdWorkflow,
-            'only toppic': OnlyToppicWorkflow,
-            'only topmg': OnlyTopmgWorkflow,
-            'only pbfgen': OnlyPbfgenWorkflow,
-            'only promex': OnlyPromexWorkflow,
-            'only mspathfinder': OnlyMSpathfinderWorkflow,
-            'pbfgen and promex': PbfgenPromexWorkflow,
+            'msconvert': MSConvertWorkflow,
+            'topfd': TopfdWorkflow,
             'toppic': ToppicWorkflow,
+            'topmg': TopmgWorkflow,
+            'pbfgen': PbfgenWorkflow,
+            'promex': PromexWorkflow,
+            'mspathfinder': MSpathfinderWorkflow,
+            'pbfgen and promex': PbfgenPromexWorkflow,
+            'toppic suit': ToppicSuitWorkflow,
+            'sum spectrum': SpectrumSumWorkflow,
             # 可以添加更多模式
         }
         

@@ -1,6 +1,6 @@
 from .BaseWorkflow import BaseWorkflow
 
-class OnlyMSpathfinderWorkflow(BaseWorkflow):
+class MSpathfinderWorkflow(BaseWorkflow):
     def __init__(self, args):
         super().__init__()
         self.args = args

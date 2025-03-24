@@ -1,6 +1,6 @@
 from .BaseWorkflow import BaseWorkflow
 
-class OnlyTopfdWorkflow(BaseWorkflow):
+class TopfdWorkflow(BaseWorkflow):
     def __init__(self, args):
         super().__init__()
         self.args = args

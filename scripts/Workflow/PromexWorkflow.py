@@ -1,23 +1,22 @@
 from .BaseWorkflow import BaseWorkflow
 
-class OnlyPromexWorkflow(BaseWorkflow):
+class PromexWorkflow(BaseWorkflow):
     def __init__(self, args):
         super().__init__()
         self.args = args
         self.input_files = args.get_ms_file_path()
 
     def prepare_workflow(self):
-        self.commands = [
-            self._promex_command()
-        ]
+        self.commands = []
+        for input_file in self.input_files:
+            self.commands.append(self._promex_command(input_file))
     
-    def _promex_command(self):
+    def _promex_command(self, input_file):
         promex_command = [self.args.tool_paths['promex']]
         
         # Required input file
         promex_command.append('-i')
-        for file in self.input_files:
-            promex_command.append(file)
+        promex_command.append(input_file)
         
         if self.args.get_output_dir():
             promex_command.append('-o')

@@ -9,21 +9,22 @@ class PbfgenPromexWorkflow(BaseWorkflow):
 
     def prepare_workflow(self):
         self.commands = []
-        self.commands.append(self._pbfgen_command(self.input_files))
+        for input_file in self.input_files:
+            self.commands.append(self._pbfgen_command(input_file))
 
         pbf_files = []
         for input_file in self.input_files:
             pbf_files.append(f"{self.output_dir}/{input_file.split('/')[-1].rsplit('.', 1)[0]}.pbf")
             
-        self.commands.append(self._promex_command(pbf_files))
+        for pbf_file in pbf_files:
+            self.commands.append(self._promex_command(pbf_file))
     
-    def _pbfgen_command(self, input_files):
+    def _pbfgen_command(self, input_file):
         pbfgen_command = [self.args.tool_paths['pbfgen']]
         
         # Required input file
         pbfgen_command.append('-i')
-        for file in input_files:
-            pbfgen_command.append(file)
+        pbfgen_command.append(input_file)
 
         if self.args.get_output_dir():
             pbfgen_command.append('-o')
@@ -46,13 +47,12 @@ class PbfgenPromexWorkflow(BaseWorkflow):
 
         return pbfgen_command
 
-    def _promex_command(self, input_files):
+    def _promex_command(self, input_file):
         promex_command = [self.args.tool_paths['promex']]
         
         # Required input file
         promex_command.append('-i')
-        for file in input_files:
-            promex_command.append(file)
+        promex_command.append(input_file)
         
         if self.args.get_output_dir():
             promex_command.append('-o')
