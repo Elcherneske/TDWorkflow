@@ -14,14 +14,16 @@ class Args:
             'pbfgen': None,
             'promex': None,
             'mspathfinder': None,
+            'python': None,  # 添加Python路径
         }
-        self.general_config_options = {}
+        
         self.msconvert_config_options = {
             'output_format': None,
             'mz_precision': None,
             'intensity_precision': None,
             'peak_picking': None,
         }
+        
         self.topfd_config_options = {
             'activation': None,
             'ms1_sn': None,
@@ -143,6 +145,17 @@ class Args:
             'UseFlipScoring': None,  
             'ParamFile': None  
         }
+
+        self.spectrum_sum_config_options = {
+            'tool':None,
+            'method': None,
+            'block_size': None,
+            'start_scan': None,
+            'end_scan': None,
+            'ms_level': None,
+            'precursor_mz': None,
+            'precursor_rt': None,
+        }
     
     def set_tool_path(self, tool_name, path):
         self.tool_paths[tool_name] = path
@@ -230,3 +243,9 @@ class Args:
     
     def get_mspathfinder_config_option(self, key):
         return self.mspathfinder_config_options.get(key, None)
+
+    def set_spectrum_sum_config_option(self, key, value):
+        self.spectrum_sum_config_options[key] = value
+
+    def get_spectrum_sum_config_option(self, key):
+        return self.spectrum_sum_config_options.get(key, None)

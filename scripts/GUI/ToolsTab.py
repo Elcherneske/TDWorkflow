@@ -1,6 +1,10 @@
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLabel, QVBoxLayout,
-                            QHBoxLayout, QGroupBox, QLineEdit)
+                            QHBoxLayout, QGroupBox, QLineEdit, QFileDialog,
+                            QMessageBox)
 from .Setting import Setting
+import os
+import subprocess
+import tempfile
 
 class ToolsTab(QWidget):
     def __init__(self, args):
@@ -28,6 +32,9 @@ class ToolsTab(QWidget):
         if not self.args.get_tool_path('spectator'):
             print("Spectator路径为空，请选择有效的路径。")
             return False
+        if not self.args.get_tool_path('python'):
+            print("Python路径为空，请选择有效的路径。")
+            return False
         return True
     
     def _init_ui(self):
@@ -50,9 +57,63 @@ class ToolsTab(QWidget):
         layout.addWidget(self._create_mspathfinder_group())
         # Spectator路径设置
         layout.addWidget(self._create_spectator_group())
+        # 添加Python路径设置 - 移到最下面
+        layout.addWidget(self._create_python_group())
         
         layout.addStretch()
         self.setLayout(layout)
+    
+    def _create_python_group(self):
+        group = QGroupBox("Python Setting")
+        layout = QVBoxLayout()
+        
+        # Python path input row
+        path_layout = QHBoxLayout()
+        python_path = QLineEdit()
+        if self.setting.get_config('Tools', 'python'):
+            python_path.setText(self.setting.get_config('Tools', 'python'))
+            self.args.set_tool_path('python', self.setting.get_config('Tools', 'python'))
+        else:
+            python_path.setPlaceholderText("Please select the path of Python executable")
+        python_path.textChanged.connect(lambda text: (self.args.set_tool_path('python', text), self.setting.set_config('Tools', 'python', text)))
+        
+        browse_btn = QPushButton("Browse")
+        check_btn = QPushButton("Check")
+        browse_btn.clicked.connect(lambda: self._browse_file(python_path))
+        check_btn.clicked.connect(lambda: self._check_python(python_path.text()))
+        
+        path_layout.addWidget(QLabel("Python path:"))
+        path_layout.addWidget(python_path)
+        path_layout.addWidget(browse_btn)
+        path_layout.addWidget(check_btn)
+        
+        # Required libraries info
+        req_label = QLabel("Required libraries: numpy, pyopenms")
+        req_label.setStyleSheet("color: #666; font-style: italic;")
+        
+        layout.addLayout(path_layout)
+        layout.addWidget(req_label)
+        
+        group.setLayout(layout)
+        return group
+    
+    def _check_python(self, python_path):
+        if not python_path:
+            QMessageBox.warning(self, "Warning", "Please select a Python path first.")
+            return
+        try:
+            check_script_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "Tools", "check_library.py")
+            # Check Python version and libraries
+            result = subprocess.run([python_path, check_script_path], capture_output=True, text=True)
+
+            output = result.stdout.strip()
+            if result.returncode == 0:
+                QMessageBox.information(self, "Success", f"Python check passed!\n\n{output}")
+            else:
+                QMessageBox.warning(self, "Warning", f"Python found, but missing required libraries:\n\n{output}")
+        
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
     
     def _create_msconvert_group(self):
         group = QGroupBox("MSConvert setting")

@@ -37,6 +37,7 @@ class Setting:
         self.set_config('Tools', 'promex', '', is_save = False)
         self.set_config('Tools', 'mspathfinder', '', is_save = False)
         self.set_config('Tools', 'spectator', '', is_save = False)
+        self.set_config('Tools', 'python', '', is_save = False)
         self.set_config('Fasta', 'fasta_path', '', is_save = False)
         self.set_config('Output', 'output_dir', '', is_save = False)
         self.save_config()

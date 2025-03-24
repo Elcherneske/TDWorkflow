@@ -4,11 +4,12 @@ from PyQt5.QtWidgets import (QWidget, QTabWidget, QHBoxLayout,
                              QApplication)
 from Args import Args
 from GUI.ToolsTab import ToolsTab
-from GUI.MSConvertConfigTab import MSConvertConfigTab
-from GUI.WorkflowConfigTab import WorkflowConfigTab
-from GUI.RunTab import RunTab
-from GUI.ToppicConfigTab import ToppicConfigTab
-from GUI.InformedProteomicsConfigTab import InformedProteomicsConfigTab
+from GUI import MSConvertConfigTab
+from GUI import WorkflowConfigTab
+from GUI import RunTab
+from GUI import ToppicConfigTab
+from GUI import InformedProteomicsConfigTab
+from GUI import SpectrumProcessingTab
 from Workflow.WorkflowManager import WorkflowManager
 
 class AppGUI(QWidget):
@@ -33,6 +34,7 @@ class AppGUI(QWidget):
         self.toppic_config_tab = ToppicConfigTab(self.args)
         self.informed_proteomics_config_tab = InformedProteomicsConfigTab(self.args)
         self.run_tab = RunTab(self.args)
+        self.spectrum_processing_tab = SpectrumProcessingTab(self.args)
 
         # 添加标签页
         self.tabs.addTab(self.tools_tab, "Tools config")
@@ -41,6 +43,7 @@ class AppGUI(QWidget):
         self.tabs.addTab(self.toppic_config_tab, "Toppic config")
         self.tabs.addTab(self.informed_proteomics_config_tab, "Informed Proteomics config")
         self.tabs.addTab(self.run_tab, "Run")
+        self.tabs.addTab(self.spectrum_processing_tab, "Spectrum Processing")
         
         # 添加运行接口
         self.run_btn = self.run_tab.run_btn
@@ -59,13 +62,13 @@ class AppGUI(QWidget):
     
     def _run_process(self):
         mode = self.args.get_mode()
-        self.workflow = WorkflowManager.create_workflow(mode, self.args) #need self., otherwise it will be deleted before finishing
+        self.workflow = WorkflowManager.create_workflow(mode, self.args)
         self.workflow.output_received.connect(self.update_output)
         self.workflow.start()
     
     def _stop_process(self):
         if self.workflow and self.workflow.isRunning():
-            self.workflow.terminate()
+            self.workflow.terminate() # todo: not kill subprocess 
             self.update_output("Process has been interrupted.")
         
 
