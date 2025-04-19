@@ -44,7 +44,7 @@ class WorkflowConfigTab(QWidget):
             "pbfgen",
             "promex",
             "mspathfinder",
-            "pbfgen+promex",
+            "pbfgen and promex",
             "sum spectrum",
             "toppic suit"
         ])

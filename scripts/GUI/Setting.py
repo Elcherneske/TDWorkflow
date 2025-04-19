@@ -1,9 +1,9 @@
 import os
 import configparser
-
-class Setting:
-    def __init__(self):
-        self.config_path = './setting.config'
+from typing import Dict
+class ToolsSetting:
+    def __init__(self, config_path = './setting.config'):
+        self.config_path = config_path
         if os.path.exists(self.config_path):
             self.config = configparser.ConfigParser()
             self.config.read(self.config_path)
@@ -41,4 +41,35 @@ class Setting:
         self.set_config('Fasta', 'fasta_path', '', is_save = False)
         self.set_config('Output', 'output_dir', '', is_save = False)
         self.save_config()
+    
+class Setting():
+    @staticmethod
+    def save(file_path: str, settings: Dict[str, Dict[str, str]]):
+        """Save MSConvert settings to a file"""
+        config = configparser.ConfigParser()
+        for section, options in settings.items():
+            config.add_section(section)
+            for key, value in options.items():
+                config[section][key] = str(value)
+            
+        with open(file_path, 'w') as configfile:
+            config.write(configfile)
 
+    def __init__(self, config_path: str):
+        self.config_path = config_path
+        if os.path.exists(self.config_path):
+            self.config = configparser.ConfigParser()
+            self.config.read(self.config_path)
+        else:
+            raise ValueError(f"Config file not found: {self.config_path}")
+    
+    def get(self, section: str, option: str):
+        """Load MSConvert settings from a file"""
+        if section not in self.config:
+            return None
+        if option not in self.config[section]:
+            return None
+        return self.config[section][option]
+
+    
+    
