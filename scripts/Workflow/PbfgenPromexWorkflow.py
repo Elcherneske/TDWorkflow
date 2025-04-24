@@ -10,16 +10,24 @@ class PbfgenPromexWorkflow(BaseWorkflow):
     def prepare_workflow(self):
         self.commands = []
         for input_file in self.input_files:
-            self.commands.append(self._pbfgen_command(input_file))
+            command = self._pbfgen_command(input_file)
+            if command:
+                self.commands.append(command)
 
         pbf_files = []
         for input_file in self.input_files:
             pbf_files.append(f"{self.output_dir}/{input_file.split('/')[-1].rsplit('.', 1)[0]}.pbf")
             
         for pbf_file in pbf_files:
-            self.commands.append(self._promex_command(pbf_file))
+            command = self._promex_command(pbf_file)
+            if command:
+                self.commands.append(command)
     
     def _pbfgen_command(self, input_file):
+        if not self.args.tool_paths['pbfgen']:
+            self.log("PBFGen路径为空，请检查配置。")
+            return None
+        
         pbfgen_command = [self.args.tool_paths['pbfgen']]
         
         # Required input file
@@ -48,6 +56,10 @@ class PbfgenPromexWorkflow(BaseWorkflow):
         return pbfgen_command
 
     def _promex_command(self, input_file):
+        if not self.args.tool_paths['promex']:
+            self.log("Promex路径为空，请检查配置。")
+            return None
+        
         promex_command = [self.args.tool_paths['promex']]
         
         # Required input file

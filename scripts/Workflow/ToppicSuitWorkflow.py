@@ -10,21 +10,31 @@ class ToppicSuitWorkflow(BaseWorkflow):
 
     def prepare_workflow(self):
         self.commands = []
-        self.commands.append(self._msconvert_command(self.input_files))
+        command = self._msconvert_command(self.input_files)
+        if command:
+            self.commands.append(command)
 
         mzml_files = []
         for input_file in self.input_files:
             mzml_files.append(f"{self.output_dir}/{input_file.split('/')[-1].rsplit('.', 1)[0]}.mzML")
             
-        self.commands.append(self._topfd_command(mzml_files))
+        command = self._topfd_command(mzml_files)
+        if command:
+            self.commands.append(command)
 
         msalign_files = []
         for mzml_file in mzml_files:
             msalign_files.append(f"{self.output_dir}/{mzml_file.split('/')[-1].rsplit('.', 1)[0]}_ms2.msalign")
 
-        self.commands.append(self._toppic_command(msalign_files))
+        command = self._toppic_command(msalign_files)
+        if command:
+            self.commands.append(command)
     
     def _msconvert_command(self, input_files):
+        if not self.args.tool_paths['msconvert']:
+            self.log("MSConvert路径为空，请检查配置。")
+            return None
+        
         msconvert_command = [self.args.tool_paths['msconvert']]
 
         msconvert_command.append('--zlib')
@@ -73,6 +83,10 @@ class ToppicSuitWorkflow(BaseWorkflow):
         return msconvert_command
     
     def _topfd_command(self, input_files):
+        if not self.args.tool_paths['topfd']:
+            self.log("TopFD路径为空，请检查配置。")
+            return None
+        
         topfd_command = [self.args.tool_paths['topfd']]
         if self.args.get_topfd_config_option('activation'):
             topfd_command.append('--activation')
@@ -129,6 +143,10 @@ class ToppicSuitWorkflow(BaseWorkflow):
         return topfd_command
 
     def _toppic_command(self, input_files):
+        if not self.args.tool_paths['toppic']:
+            self.log("TopPIC路径为空，请检查配置。")
+            return None
+        
         toppic_command = [self.args.tool_paths['toppic']]
 
         if self.args.get_toppic_config_option('activation'):

@@ -17,9 +17,6 @@ class InformedProteomicsConfigTab(QWidget):
         }
         self._init_ui()
     
-    def check(self) -> bool:
-        return True
-    
     def _init_ui(self):
         # 创建主布局
         main_layout = QVBoxLayout()

@@ -8,11 +8,16 @@ class ToppicWorkflow(BaseWorkflow):
         self.fasta_file = args.get_fasta_path()
 
     def prepare_workflow(self):
-        self.commands = [
-            self._toppic_command()
-        ]
+        self.commands = []
+        command = self._toppic_command()
+        if command:
+            self.commands.append(command)
     
     def _toppic_command(self):
+        if not self.args.tool_paths['toppic']:
+            self.log("TopPIC路径为空，请检查配置。")
+            return None
+        
         toppic_command = [self.args.tool_paths['toppic']]
         
         if self.args.get_toppic_config_option('activation'):

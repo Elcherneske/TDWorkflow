@@ -9,9 +9,15 @@ class PromexWorkflow(BaseWorkflow):
     def prepare_workflow(self):
         self.commands = []
         for input_file in self.input_files:
-            self.commands.append(self._promex_command(input_file))
+            command = self._promex_command(input_file)
+            if command:
+                self.commands.append(command)
     
     def _promex_command(self, input_file):
+        if not self.args.tool_paths['promex']:
+            self.log("Promex路径为空，请检查配置。")
+            return None
+        
         promex_command = [self.args.tool_paths['promex']]
         
         # Required input file

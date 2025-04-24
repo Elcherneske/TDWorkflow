@@ -9,21 +9,6 @@ class WorkflowConfigTab(QWidget):
         self.setting = ToolsSetting()
         self._init_ui()
     
-    def check(self) -> bool:
-        if not self.args.get_ms_file_path():
-            print("MS文件路径为空，请选择有效的路径。")
-            return False
-        
-        if not self.args.get_fasta_path():
-            print("FASTA文件路径为空，请选择有效的路径。")
-            return False
-        
-        if not self.args.get_mode():
-            print("工作模式未设置，请选择有效的模式。")
-            return False
-            
-        return True
-    
     def _init_ui(self):
         layout = QVBoxLayout()
         layout.addWidget(self._create_mode_group())

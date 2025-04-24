@@ -19,7 +19,7 @@ class BaseWorkflow(QThread):
     def run(self):
         self.prepare_workflow()
         for command in self.commands:
-            self.output_received.emit("command: " + ' '.join(command))
+            self.log("command: " + ' '.join(command))
             self.process = subprocess.Popen(
                 command,
                 stdout=subprocess.PIPE,
@@ -31,9 +31,12 @@ class BaseWorkflow(QThread):
                 if output == '' and self.process.poll() is not None:
                     break
                 if output:
-                    self.output_received.emit(output)
+                    self.log(output)
                     
-        self.output_received.emit("============Process finished============")
+        self.log("============Process finished============")
+
+    def log(self, text):
+        self.output_received.emit(text)
 
 if __name__ == '__main__':
     import sys

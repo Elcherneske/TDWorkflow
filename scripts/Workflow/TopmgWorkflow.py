@@ -8,11 +8,16 @@ class TopmgWorkflow(BaseWorkflow):
         self.fasta_file = args.get_fasta_path()
 
     def prepare_workflow(self):
-        self.commands = [
-            self._topmg_command()
-        ]
+        self.commands = []
+        command = self._topmg_command()
+        if command:
+            self.commands.append(command)
     
     def _topmg_command(self):
+        if not self.args.tool_paths['topmg']:
+            self.log("TopMG路径为空，请检查配置。")
+            return None
+        
         topmg_command = [self.args.tool_paths['topmg']]
         
         if self.args.get_topmg_config_option('activation'):

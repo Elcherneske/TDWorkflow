@@ -9,10 +9,16 @@ class PbfgenWorkflow(BaseWorkflow):
     def prepare_workflow(self):
         self.commands = []
         for input_file in self.input_files:
-            self.commands.append(self._pbfgen_command(input_file))
+            command = self._pbfgen_command(input_file)
+            if command:
+                self.commands.append(command)
 
     
     def _pbfgen_command(self, input_file):
+        if not self.args.tool_paths['pbfgen']:
+            self.log("PBFGen路径为空，请检查配置。")
+            return None
+        
         pbfgen_command = [self.args.tool_paths['pbfgen']]
         
         # Required input file

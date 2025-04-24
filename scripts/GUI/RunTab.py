@@ -20,12 +20,6 @@ class RunTab(QWidget):
         self.buffer_size = 0
         self.last_progress_line = ""
         self._init_ui()
-    
-    def check(self) -> bool:
-        if not self.args.get_output_dir():
-            print("输出路径为空，请选择有效的路径。")
-            return False
-        return True
 
     def _is_progress_line(self, text):
         # progress_pattern = re.compile(r'Processing MS\d+ spectrum scan \d+ \.\.\.\s+\d+% finished\.\s*[\r\n]*')

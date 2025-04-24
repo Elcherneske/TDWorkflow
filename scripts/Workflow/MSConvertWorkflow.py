@@ -7,11 +7,16 @@ class MSConvertWorkflow(BaseWorkflow):
         self.input_files = args.get_ms_file_path()
 
     def prepare_workflow(self):
-        self.commands = [
-            self._msconvert_command()
-        ] 
+        self.commands = []
+        command = self._msconvert_command()
+        if command:
+            self.commands.append(command)
 
     def _msconvert_command(self):
+        if not self.args.tool_paths['msconvert']:
+            self.log("MSConvert路径为空，请检查配置。")
+            return None
+        
         msconvert_command = [self.args.tool_paths['msconvert']]
 
         msconvert_command.append('--zlib')

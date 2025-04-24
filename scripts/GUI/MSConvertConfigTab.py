@@ -19,9 +19,6 @@ class MSConvertConfigTab(QWidget):
         }
         self._init_ui()
     
-    def check(self) -> bool:
-        return True
-    
     def _init_ui(self):
         layout = QVBoxLayout()
         

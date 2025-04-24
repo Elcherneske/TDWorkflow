@@ -1,6 +1,6 @@
 from .BaseWorkflow import BaseWorkflow
 import os
-
+import sys
 class SpectrumSumWorkflow(BaseWorkflow):
     def __init__(self, args):
         super().__init__()
@@ -11,12 +11,16 @@ class SpectrumSumWorkflow(BaseWorkflow):
     def prepare_workflow(self):
         self.commands = []
         for input_file in self.input_files:
-            self.commands.append(self._sum_spectrum_command(input_file))
+            command = self._sum_spectrum_command(input_file)
+            if command:
+                self.commands.append(command)
     
     def _sum_spectrum_command(self, input_file):
-        python_path = self.args.get_tool_path('python')
+        python_path = sys.executable
         if not python_path:
-            raise ValueError("Python path is not set. Please configure it in the Tools tab.")
+            self.log("Python path is not set. Please configure it in the Tools tab.")
+            return None
+
         script_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "Tools", "spectrum_sum.py")
 
         sum_spectrum_command = [python_path, script_path]

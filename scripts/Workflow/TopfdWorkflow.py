@@ -7,12 +7,16 @@ class TopfdWorkflow(BaseWorkflow):
         self.input_files = args.get_ms_file_path()
 
     def prepare_workflow(self):
-        # 示例：设置OnlyTopfd的命令序列
-        self.commands = [
-            self._topfd_command()
-        ] 
+        self.commands = []
+        command = self._topfd_command()
+        if command:
+            self.commands.append(command)
 
     def _topfd_command(self):
+        if not self.args.tool_paths['topfd']:
+            self.log("TopFD路径为空，请检查配置。")
+            return None
+        
         topfd_command = [self.args.tool_paths['topfd']]
         if self.args.get_topfd_config_option('activation'):
             topfd_command.append('--activation')
