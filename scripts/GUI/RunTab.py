@@ -1,18 +1,19 @@
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout,
                             QGroupBox, QLabel, QLineEdit, QPushButton, QTextEdit, QFileDialog)
-from .Setting import Setting
+from .Setting import ToolsSetting
 import os
 import io
 import re
-
+import datetime
 class RunTab(QWidget):
     def __init__(self, args):
         super().__init__()
         self.args = args
-        self.setting = Setting()
+        self.setting = ToolsSetting()
         self.output_text = None
         self.run_button = None
         self.stop_button = None
+        self.vis_button = None
         
         self.log_file = None
         self.log_buffer = io.StringIO()
@@ -58,9 +59,10 @@ class RunTab(QWidget):
         # Handle log file writing
         if self.args.get_output_dir():
             if self.log_file is None:
-                log_path = os.path.join(self.args.get_output_dir(), "log.txt")
-                if os.path.exists(log_path):
-                    os.remove(log_path)
+                # 使用当前时间创建日志文件名
+                current_time = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+                log_filename = f"{current_time}_log.txt"
+                log_path = os.path.join(self.args.get_output_dir(), log_filename)
                 try:
                     self.log_file = open(log_path, 'a', encoding='utf-8')
                 except (IOError, OSError) as e:
@@ -96,6 +98,7 @@ class RunTab(QWidget):
         layout.addWidget(self._create_output_group())
         layout.addWidget(self._create_run_button())
         layout.addWidget(self._create_stop_button())
+        layout.addWidget(self._create_vis_button())
         layout.addWidget(self._create_output_text())
         self.setLayout(layout)
     
@@ -133,6 +136,15 @@ class RunTab(QWidget):
         self.stop_btn = QPushButton("Stop")
         layout.addWidget(QLabel("Stop Button:"))
         layout.addWidget(self.stop_btn)
+        group.setLayout(layout)
+        return group
+
+    def _create_vis_button(self):
+        group = QGroupBox("Visualization")
+        layout = QHBoxLayout()
+        self.vis_btn = QPushButton("Visualization")
+        layout.addWidget(QLabel("Visualization Button:"))
+        layout.addWidget(self.vis_btn)
         group.setLayout(layout)
         return group
     

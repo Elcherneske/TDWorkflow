@@ -1,8 +1,9 @@
 import os
 import configparser
 from typing import Dict
+
 class ToolsSetting:
-    def __init__(self, config_path = './setting.config'):
+    def __init__(self, config_path = './tools.config'):
         self.config_path = config_path
         if os.path.exists(self.config_path):
             self.config = configparser.ConfigParser()
@@ -70,6 +71,10 @@ class Setting():
         if option not in self.config[section]:
             return None
         return self.config[section][option]
+
+    def get_all(self):
+        """Get all settings"""
+        return self.config
 
     
     

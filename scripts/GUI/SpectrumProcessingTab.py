@@ -9,14 +9,122 @@ class SpectrumProcessingTab(QWidget):
     def __init__(self, args):
         super().__init__()
         self.args = args
+        # 用于保存所有UI控件
+        self.ui = {
+            'spectrum_sum': {}
+        }
         self._init_ui()
     
     def _init_ui(self):
         layout = QVBoxLayout()
+        
+        # 添加保存/加载按钮
+        buttons_layout = QHBoxLayout()
+        save_button = QPushButton("保存设置")
+        load_button = QPushButton("加载设置")
+        save_button.clicked.connect(self._save_settings)
+        load_button.clicked.connect(self._load_settings)
+        buttons_layout.addWidget(save_button)
+        buttons_layout.addWidget(load_button)
+        layout.addLayout(buttons_layout)
+        
         # Spectrum summing options
         layout.addWidget(self._create_summing_options_group())
         layout.addStretch()
         self.setLayout(layout)
+    
+    def _save_settings(self):
+        """保存当前设置到文件"""
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "保存光谱处理设置", "", "设置文件 (*.ini);;所有文件 (*)"
+        )
+        
+        if not file_path:
+            QMessageBox.information(self, "错误", "未选择保存路径！")
+            return
+            
+        try:
+            # 从self.ui收集当前设置
+            settings = {
+                'spectrum_sum': self._collect_spectrum_sum_settings()
+            }
+            
+            # 使用Setting类保存设置
+            Setting.save(file_path, settings)
+            QMessageBox.information(self, "成功", "设置已成功保存！")
+        except Exception as e:
+            QMessageBox.critical(self, "错误", f"保存设置失败: {str(e)}")
+    
+    def _collect_spectrum_sum_settings(self):
+        """收集光谱合并设置"""
+        settings = {}
+        for key, widget in self.ui['spectrum_sum'].items():
+            if isinstance(widget, QSpinBox) or isinstance(widget, QDoubleSpinBox):
+                settings[key] = str(widget.value())
+            elif isinstance(widget, QLineEdit):
+                settings[key] = widget.text()
+            elif isinstance(widget, QComboBox):
+                settings[key] = widget.currentText()
+            elif isinstance(widget, QRadioButton):
+                if widget.isChecked():
+                    settings['method'] = key
+        return settings
+    
+    def _load_settings(self):
+        """从文件加载设置"""
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "加载光谱处理设置", "", "设置文件 (*.ini);;所有文件 (*)"
+        )
+        
+        if not file_path:
+            QMessageBox.information(self, "错误", "未选择加载路径！")
+            return
+            
+        try:
+            # 创建Setting实例加载配置
+            setting_instance = Setting(file_path)
+            
+            # 更新光谱合并设置
+            self._update_spectrum_sum_settings(setting_instance)
+            
+            QMessageBox.information(self, "成功", "设置已成功加载！")
+        except Exception as e:
+            QMessageBox.critical(self, "错误", f"加载设置失败: {str(e)}")
+    
+    def _update_spectrum_sum_settings(self, setting_instance):
+        """从配置更新光谱合并设置"""
+        # 更新方法选择
+        method = setting_instance.get('spectrum_sum', 'method')
+        if method:
+            if method == 'block':
+                self.block_radio.setChecked(True)
+            elif method == 'range':
+                self.range_radio.setChecked(True)
+            elif method == 'precursor':
+                self.precursor_radio.setChecked(True)
+            self.args.set_spectrum_sum_config_option('method', method)
+        
+        # 更新其他控件
+        for key, widget in self.ui['spectrum_sum'].items():
+            if key != 'block' and key != 'range' and key != 'precursor':
+                value = setting_instance.get('spectrum_sum', key)
+                if value:
+                    if isinstance(widget, QSpinBox):
+                        widget.setValue(int(value))
+                        self.args.set_spectrum_sum_config_option(key, int(value))
+                    elif isinstance(widget, QDoubleSpinBox):
+                        widget.setValue(float(value))
+                        self.args.set_spectrum_sum_config_option(key, float(value))
+                    elif isinstance(widget, QLineEdit):
+                        widget.setText(value)
+                        self.args.set_spectrum_sum_config_option(key, value)
+                    elif isinstance(widget, QComboBox):
+                        widget.setCurrentText(value)
+                        self.args.set_spectrum_sum_config_option(key, value)
+                else:
+                    if isinstance(widget, QLineEdit):
+                        widget.setText(value)
+                        self.args.set_spectrum_sum_config_option(key, value)
     
     def _create_summing_options_group(self):
         group = QGroupBox("Spectrum Summing Options")
@@ -35,6 +143,7 @@ class SpectrumProcessingTab(QWidget):
         tool_layout.addWidget(QLabel("Tools:"))
         tool_layout.addWidget(tool_combo)
         layout.addLayout(tool_layout)
+        self.ui['spectrum_sum']['tool'] = tool_combo
         
         # Summing method selection
         method_layout = QHBoxLayout()
@@ -45,14 +154,17 @@ class SpectrumProcessingTab(QWidget):
         self.block_radio.toggled.connect(self._toggle_summing_options)
         method_group.addButton(self.block_radio)
         self.args.set_spectrum_sum_config_option('method', 'block')
+        self.ui['spectrum_sum']['block'] = self.block_radio
         
         self.range_radio = QRadioButton("Range Summing")
         self.range_radio.toggled.connect(self._toggle_summing_options)
         method_group.addButton(self.range_radio)
+        self.ui['spectrum_sum']['range'] = self.range_radio
 
         self.precursor_radio = QRadioButton("Precursor Summing")
         self.precursor_radio.toggled.connect(self._toggle_summing_options)
         method_group.addButton(self.precursor_radio)
+        self.ui['spectrum_sum']['precursor'] = self.precursor_radio
         
         method_layout.addWidget(self.block_radio)
         method_layout.addWidget(self.range_radio)
@@ -84,10 +196,11 @@ class SpectrumProcessingTab(QWidget):
         ms_level_combo = QComboBox()
         ms_level_combo.addItems(["MS1", "MS2"])
         ms_level_combo.currentIndexChanged.connect(
-            lambda ms_level: self.args.set_spectrum_sum_config_option('ms_level', ms_level)
+            lambda index: self.args.set_spectrum_sum_config_option('ms_level', index)
         )
         ms_level_layout.addRow("MS Level:", ms_level_combo)
         layout.addLayout(ms_level_layout)
+        self.ui['spectrum_sum']['ms_level'] = ms_level_combo
         
         group.setLayout(layout)
         return group
@@ -112,6 +225,7 @@ class SpectrumProcessingTab(QWidget):
             lambda value: self.args.set_spectrum_sum_config_option('block_size', value)
         )
         layout.addRow("Block Size:", block_size)
+        self.ui['spectrum_sum']['block_size'] = block_size
         return layout
     
     def _create_range_summing_options(self):
@@ -122,6 +236,7 @@ class SpectrumProcessingTab(QWidget):
         start_scan.valueChanged.connect(
             lambda value: self.args.set_spectrum_sum_config_option('start_scan', value)
         )
+        self.ui['spectrum_sum']['start_scan'] = start_scan
         
         end_scan = QSpinBox()
         end_scan.setRange(1, 100000)
@@ -129,6 +244,7 @@ class SpectrumProcessingTab(QWidget):
         end_scan.valueChanged.connect(
             lambda value: self.args.set_spectrum_sum_config_option('end_scan', value)
         )
+        self.ui['spectrum_sum']['end_scan'] = end_scan
         
         layout.addRow("Start Scan:", start_scan)
         layout.addRow("End Scan:", end_scan)
@@ -142,6 +258,7 @@ class SpectrumProcessingTab(QWidget):
         precursor_mz.valueChanged.connect(
             lambda value: self.args.set_spectrum_sum_config_option('precursor_mz', value)
         )
+        self.ui['spectrum_sum']['precursor_mz'] = precursor_mz
 
         precursor_rt = QDoubleSpinBox()
         precursor_rt.setRange(0, 100000)
@@ -149,9 +266,9 @@ class SpectrumProcessingTab(QWidget):
         precursor_rt.valueChanged.connect(
             lambda value: self.args.set_spectrum_sum_config_option('precursor_rt', value)
         )
+        self.ui['spectrum_sum']['precursor_rt'] = precursor_rt
 
         layout.addRow("Precursor M/Z:", precursor_mz)
         layout.addRow("Precursor RT:", precursor_rt)
         return layout
-    
         

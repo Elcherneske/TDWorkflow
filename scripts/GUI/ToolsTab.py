@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLabel, QVBoxLayout,
                             QHBoxLayout, QGroupBox, QLineEdit, QFileDialog,
                             QMessageBox)
-from .Setting import Setting
+from .Setting import ToolsSetting
 import os
 import subprocess
 import tempfile
@@ -10,7 +10,7 @@ class ToolsTab(QWidget):
     def __init__(self, args):
         super().__init__()
         self.args = args
-        self.setting = Setting()
+        self.setting = ToolsSetting()
         self._init_ui()
     
     def check(self) -> bool:

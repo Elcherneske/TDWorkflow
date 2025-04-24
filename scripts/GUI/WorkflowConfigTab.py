@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout,
                              QGroupBox, QLabel, QComboBox, QLineEdit, QPushButton)
-from .Setting import Setting
+from .Setting import ToolsSetting
 
 class WorkflowConfigTab(QWidget):
     def __init__(self, args):
         super().__init__()
         self.args = args
-        self.setting = Setting()
+        self.setting = ToolsSetting()
         self._init_ui()
     
     def check(self) -> bool:
